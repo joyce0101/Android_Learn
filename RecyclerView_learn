@@ -1,0 +1,45 @@
+# 12月10日学习记录 （关于RecyclerView的使用）
+https://www.jianshu.com/p/5ad99a1170ab
+## 重点讲解：
+一、点击事件（定义回调接口）：
+在自定义的Adapter类中写以下方法：
+~~~java
+  //定义listener接口成员变量
+   private OnItemClickListener listener;
+   //定义listener接口
+    public interface OnItemClickListener{
+        void onItemLongClick(View itemView, int position);
+    }
+    //定义set方法供外部使用listener接口
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
+    //将数据绑定
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHodler viewHodler, int i) {
+        String data = string.get( i );
+        viewHodler.textView.setText( data );
+        if(listener!=null){
+            viewHodler.itemView.setOnLongClickListener( new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = viewHodler.getLayoutPosition();
+                    position = pos;//返回点击的item的position
+                    listener.onItemLongClick(viewHodler.itemView,pos);
+                    return false;
+                }
+            } );
+        }
+
+    }
+
+~~~
+在RecyclerView的activity中使用onclick（）
+~~~java
+mRecyclerAdapter.setOnItemClickListener( new RecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemLongClick(View itemView, int position) {
+                showDialog();
+            }
+        } );
+~~~
